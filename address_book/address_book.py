@@ -39,7 +39,6 @@ def initdb_command():
 def show_main_page():
     return render_template('main.html')
 
-#TODO: logger
 @app.route('/contacts', methods=['GET', 'PUT'])
 def process_contacts():
     response = {}
@@ -83,6 +82,7 @@ def list_contacts():
         contacts = cur.fetchall()
         return (contacts, '')
     except Exception as e:
+        app.logger.error(e)
         return ([], e)
 
 def create_contact():
@@ -95,6 +95,7 @@ def create_contact():
         db.commit()
         return (cur.lastrowid, '')
     except Exception as e:
+        app.logger.error(e)
         return (False, e)
     
 def read_contact():
@@ -107,8 +108,10 @@ def edit_contact(contact_id):
             [request.json['name'], request.json['email'],
              request.json.get('phone', ''), contact_id])
         db.commit()
+        app.logger.info("Updated contact %d" % contact_id)
         return (True, '')
     except Exception as e:
+        app.logger.error(e)
         return (False, e)
 
 def delete_contact(contact_id):
@@ -118,4 +121,5 @@ def delete_contact(contact_id):
         db.commit()
         return (True, '')
     except Exception as e:
+        app.logger.error(e)
         return (False, e)
