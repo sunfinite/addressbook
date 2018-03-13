@@ -1,0 +1,3 @@
+graft address_book/templates
+graft address_book/static
+include address_book/schema.sql
